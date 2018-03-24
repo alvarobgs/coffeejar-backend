@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.abg.coffeejar.api.enumeration.PersonType;
@@ -27,6 +28,7 @@ public class Client extends AbstractEntity {
 	 */
 	@Getter
 	@Setter
+	@NotNull
 	@Size(max = 100)
 	@Column(name = "name", length = 100, nullable = false)
 	private String name;
@@ -36,6 +38,7 @@ public class Client extends AbstractEntity {
 	 */
 	@Getter
 	@Setter
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name = "person_type", length = 25, nullable = false)
 	private PersonType personType;

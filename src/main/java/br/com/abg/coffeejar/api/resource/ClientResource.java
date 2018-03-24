@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.abg.coffeejar.api.event.GeneratedResourceEvent;
 import br.com.abg.coffeejar.api.model.Client;
 import br.com.abg.coffeejar.api.repository.ClientRepository;
 
@@ -38,6 +41,12 @@ public class ClientResource {
 	@Autowired
 	private ClientRepository clientRepository;
 
+	/**
+	 *
+	 */
+	@Autowired
+	private ApplicationEventPublisher publisher;
+
 	@GetMapping
 	public List<Client> list() {
 		return this.clientRepository.findAll();
@@ -50,11 +59,9 @@ public class ClientResource {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void save(@RequestBody final Client client, final HttpServletResponse response) {
+	public ResponseEntity<Client> save(@Valid @RequestBody final Client client, final HttpServletResponse response) {
 		final Client savedClient = this.clientRepository.save(client);
-
-		final URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{code}")
-											 .buildAndExpand(savedClient.getId()).toUri();
-		response.setHeader("Location", uri.toASCIIString());
+		publisher.publishEvent(new GeneratedResourceEvent(this, response, savedClient.getId()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedClient);
 	}
 }
