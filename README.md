@@ -1,2 +1,2 @@
 # CoffeeJar-backend
-oi tchau
+Backend para a aplicação CoffeeJar
