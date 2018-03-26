@@ -1,12 +1,11 @@
 package br.com.abg.coffeejar.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.abg.coffeejar.api.model.Client;
@@ -86,10 +85,7 @@ public class ClientService {
 	 * @param filter
 	 * @return
 	 */
-	public List<Client> list(final ClientFilter filter) {
-		if (Validator.isEmpty(filter)) {
-			return this.clientRepository.findAll();
-		}
-		return this.clientRepository.list(filter);
+	public Page<Client> list(final ClientFilter filter, final Pageable pageable) {
+		return this.clientRepository.list(filter, pageable);
 	}
 }
