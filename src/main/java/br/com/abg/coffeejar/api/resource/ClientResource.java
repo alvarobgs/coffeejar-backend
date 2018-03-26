@@ -7,13 +7,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -63,5 +66,19 @@ public class ClientResource {
 		final Client savedClient = this.clientRepository.save(client);
 		publisher.publishEvent(new GeneratedResourceEvent(this, response, savedClient.getId()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedClient);
+	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remove(@PathVariable final Long id) {
+		this.clientRepository.deleteById(id);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Client> update(@PathVariable final Long id, @Valid @RequestBody final Client client) {
+		final Client clientToUpdate = this.clientRepository.getOne(id);
+		BeanUtils.copyProperties(clientToUpdate, client, "id");
+		this.clientRepository.save(clientToUpdate);
+		return ResponseEntity.ok(clientToUpdate);
 	}
 }
