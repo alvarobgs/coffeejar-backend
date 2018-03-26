@@ -3,6 +3,7 @@ package br.com.abg.coffeejar.api.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.abg.coffeejar.api.model.Client;
+import br.com.abg.coffeejar.api.repository.query.ClientRepositoryQuery;
 
 /**
  *
@@ -11,6 +12,6 @@ import br.com.abg.coffeejar.api.model.Client;
  *
  * @since 1.0.0
  */
-public interface ClientRepository extends JpaRepository<Client, Long> {
+public interface ClientRepository extends JpaRepository<Client, Long>, ClientRepositoryQuery {
 
 }
