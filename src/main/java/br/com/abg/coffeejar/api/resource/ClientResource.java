@@ -1,16 +1,13 @@
 package br.com.abg.coffeejar.api.resource;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,13 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.abg.coffeejar.api.event.GeneratedResourceEvent;
 import br.com.abg.coffeejar.api.model.Client;
-import br.com.abg.coffeejar.api.repository.ClientRepository;
+import br.com.abg.coffeejar.api.repository.filter.ClientFilter;
 import br.com.abg.coffeejar.api.service.ClientService;
-import br.com.abg.coffeejar.api.utils.Validator;
 
 /**
  *
@@ -40,7 +35,6 @@ import br.com.abg.coffeejar.api.utils.Validator;
 @RestController
 @RequestMapping("/clients")
 public class ClientResource {
-
 
 	/**
 	 * Injeção do serviço da entidade cliente.
@@ -55,8 +49,8 @@ public class ClientResource {
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
-	public List<Client> list() {
-		return this.clientService.list(null);
+	public Page<Client> list(final ClientFilter filter, final Pageable pageable) {
+		return this.clientService.list(filter, pageable);
 	}
 
 	@GetMapping("/{id}")

@@ -1,6 +1,8 @@
 package br.com.abg.coffeejar.api.repository.query;
 
-import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import br.com.abg.coffeejar.api.model.Client;
 import br.com.abg.coffeejar.api.repository.filter.ClientFilter;
@@ -21,5 +23,5 @@ public interface ClientRepositoryQuery {
 	 *
 	 * @return
 	 */
-	List<Client> list(ClientFilter filter);
+	Page<Client> list(ClientFilter filter, Pageable pageable);
 }
