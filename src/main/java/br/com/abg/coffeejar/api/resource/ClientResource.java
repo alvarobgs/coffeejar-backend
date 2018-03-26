@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +27,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.abg.coffeejar.api.event.GeneratedResourceEvent;
 import br.com.abg.coffeejar.api.model.Client;
 import br.com.abg.coffeejar.api.repository.ClientRepository;
+import br.com.abg.coffeejar.api.service.ClientService;
+import br.com.abg.coffeejar.api.utils.Validator;
 
 /**
  *
@@ -38,32 +41,33 @@ import br.com.abg.coffeejar.api.repository.ClientRepository;
 @RequestMapping("/clients")
 public class ClientResource {
 
-	/**
-	 *
-	 */
-	@Autowired
-	private ClientRepository clientRepository;
 
 	/**
-	 *
+	 * Injeção do serviço da entidade cliente.
+	 */
+	@Autowired
+	private ClientService clientService;
+
+	/**
+	 * Publicação de eventos.
 	 */
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
 	public List<Client> list() {
-		return this.clientRepository.findAll();
+		return this.clientService.list(null);
 	}
 
 	@GetMapping("/{id}")
 	public Client getById(@PathVariable final Long id) {
-		return this.clientRepository.getOne(id);
+		return this.clientService.getById(id);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Client> save(@Valid @RequestBody final Client client, final HttpServletResponse response) {
-		final Client savedClient = this.clientRepository.save(client);
+		final Client savedClient = this.clientService.save(client);
 		publisher.publishEvent(new GeneratedResourceEvent(this, response, savedClient.getId()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedClient);
 	}
@@ -71,14 +75,11 @@ public class ClientResource {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remove(@PathVariable final Long id) {
-		this.clientRepository.deleteById(id);
+		this.clientService.remove(id);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Client> update(@PathVariable final Long id, @Valid @RequestBody final Client client) {
-		final Client clientToUpdate = this.clientRepository.getOne(id);
-		BeanUtils.copyProperties(clientToUpdate, client, "id");
-		this.clientRepository.save(clientToUpdate);
-		return ResponseEntity.ok(clientToUpdate);
+		return ResponseEntity.ok(this.clientService.update(id, client));
 	}
 }
