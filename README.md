@@ -1,2 +1,2 @@
 # CoffeeJar-backend
-Backend para a aplicação CoffeeJar
+Backend em Java para a aplicação CoffeeJar utilizando SpringFramework
