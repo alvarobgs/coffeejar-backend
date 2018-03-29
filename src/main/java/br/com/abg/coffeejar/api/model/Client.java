@@ -21,7 +21,7 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "client")
-public class Client extends AbstractEntity {
+public class Client extends AbstractModel {
 
 	/**
 	 * Nome do cliente.

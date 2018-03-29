@@ -18,11 +18,11 @@ import lombok.Setter;
  */
 @MappedSuperclass
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public abstract class AbstractEntity {
+public abstract class AbstractModel {
 
 	@Id
 	@Getter
 	@Setter
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	protected Long id;
 }

@@ -20,6 +20,7 @@ public interface ClientRepositoryQuery {
 	 * Lista os clientes de acordo com o filtro.
 	 *
 	 * @param filter
+	 * @param pageable
 	 *
 	 * @return
 	 */

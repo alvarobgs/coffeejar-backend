@@ -1,20 +1,20 @@
 package br.com.abg.coffeejar.api.enumeration;
 
 /**
- * Enum para tipo de pessoa.
+ * Enum para tipo de endereço.
  *
  * @author <a href="mail:alvaro.govone@waiodev.com.br">Alvaro Govone</a>
  * @since 1.0.0
  */
-public enum PersonType {
+public enum AddressType {
 
 	/**
-	 * Física
+	 * Entrega.
 	 */
-	INDIVIDUAL,
+	DELIVERY,
 
 	/**
-	 * Jurídica.
+	 * Principal.
 	 */
-	JURIDICAL;
+	MAIN;
 }
