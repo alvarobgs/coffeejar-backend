@@ -12,14 +12,13 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import br.com.abg.coffeejar.api.enumeration.DocumentType;
 import br.com.abg.coffeejar.api.utils.Validator;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para documento.
@@ -29,7 +28,9 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
-@Table(name = "documento")
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "number", "documentType" }, callSuper = false)
+@Table(name = "document")
 public class Document extends AbstractModel {
 
 	/**
@@ -83,20 +84,5 @@ public class Document extends AbstractModel {
 	 */
 	public boolean isRequired() {
 		return !Validator.isEmpty(this.documentType) && this.documentType.isRequired();
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(number).append(documentType).toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Document))
-			return false;
-		final Document document = (Document) o;
-		return new EqualsBuilder().append(number, document.number).append(documentType, document.documentType).isEquals();
 	}
 }

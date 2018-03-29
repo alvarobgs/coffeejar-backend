@@ -1,5 +1,6 @@
 package br.com.abg.coffeejar.api.model;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -9,11 +10,10 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para produtos da compra.
@@ -23,14 +23,24 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "purchase", "orderProduct" }, callSuper = false)
 @Table(name = "purchase_product", uniqueConstraints = @UniqueConstraint(name = "uq_purchase_product", columnNames = { "product_id", "purchase_id" }))
-public class PurchaseProduct extends AbstractOrderProduct {
+public class PurchaseProduct extends AbstractModel {
 
 	/**
 	 * Constante para chave estrangeira.
 	 */
 	@Transient
 	private static final transient String FK = "fk_purchase_product_";
+
+	/**
+	 * Produto
+	 */
+	@Getter
+	@Setter
+	@Embedded
+	private OrderProduct orderProduct;
 
 	/**
 	 * Compra.
@@ -42,18 +52,10 @@ public class PurchaseProduct extends AbstractOrderProduct {
 	@JoinColumn(name = "purchase_id", foreignKey = @ForeignKey(name = FK + "purchase"), nullable = false)
 	private Purchase purchase;
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(product).append(purchase).toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof PurchaseProduct))
-			return false;
-		final PurchaseProduct that = (PurchaseProduct) o;
-		return new EqualsBuilder().append(product, that.product).append(purchase, that.purchase).isEquals();
+	/**
+	 * Construtor.
+	 */
+	public PurchaseProduct() {
+		this.orderProduct = new OrderProduct();
 	}
 }

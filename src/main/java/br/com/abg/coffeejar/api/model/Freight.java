@@ -10,9 +10,9 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para produtos do orçamento.
@@ -22,6 +22,7 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
 @Table(name = "freight")
 public class Freight extends AbstractModel {
 

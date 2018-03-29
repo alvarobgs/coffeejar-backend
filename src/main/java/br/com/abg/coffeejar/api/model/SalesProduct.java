@@ -1,5 +1,6 @@
 package br.com.abg.coffeejar.api.model;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -9,11 +10,10 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para produtos da compra.
@@ -23,14 +23,24 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "sales", "orderProduct" }, callSuper = false)
 @Table(name = "sales_product", uniqueConstraints = @UniqueConstraint(name = "uq_sales_product", columnNames = { "product_id", "sales_id" }))
-public class SalesProduct extends AbstractOrderProduct {
+public class SalesProduct extends AbstractModel {
 
 	/**
 	 * Constante para chave estrangeira.
 	 */
 	@Transient
 	private static final transient String FK = "fk_sales_product_";
+
+	/**
+	 * Produto
+	 */
+	@Getter
+	@Setter
+	@Embedded
+	private OrderProduct orderProduct;
 
 	/**
 	 * Compra.
@@ -42,18 +52,10 @@ public class SalesProduct extends AbstractOrderProduct {
 	@JoinColumn(name = "sales_id", foreignKey = @ForeignKey(name = FK + "sales"), nullable = false)
 	private Sales sales;
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(product).append(sales).toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof SalesProduct))
-			return false;
-		final SalesProduct that = (SalesProduct) o;
-		return new EqualsBuilder().append(product, that.product).append(sales, that.sales).isEquals();
+	/**
+	 * Construtor.
+	 */
+	public SalesProduct() {
+		this.orderProduct = new OrderProduct();
 	}
 }

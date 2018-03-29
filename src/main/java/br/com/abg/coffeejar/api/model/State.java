@@ -14,11 +14,10 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para estado.
@@ -28,6 +27,8 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "name", "country" }, callSuper = false)
 @Table(name = "state", uniqueConstraints = {@UniqueConstraint(columnNames = { "name", "country_id" }, name = "uq_state")})
 public class State extends AbstractModel {
 
@@ -84,18 +85,4 @@ public class State extends AbstractModel {
 	@OneToMany(mappedBy = "state", fetch = FetchType.LAZY)
 	private List<City> cities;
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(name).append(country).toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof State))
-			return false;
-		final State state = (State) o;
-		return new EqualsBuilder().append(name, state.name).append(country, state.country).isEquals();
-	}
 }

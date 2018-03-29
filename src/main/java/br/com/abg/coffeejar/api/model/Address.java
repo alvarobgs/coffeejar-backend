@@ -14,8 +14,10 @@ import javax.validation.constraints.Size;
 
 import br.com.abg.coffeejar.api.enumeration.AddressType;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para endereço.
@@ -25,6 +27,8 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "number", "zipCode", "city" }, callSuper = false)
 @Table(name = "address")
 public class Address extends AbstractModel {
 

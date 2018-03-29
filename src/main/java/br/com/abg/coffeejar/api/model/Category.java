@@ -6,11 +6,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Categoria de produto.
@@ -19,6 +18,8 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "name" }, callSuper = false)
 @Table(name = "category")
 public class Category extends AbstractModel {
 
@@ -31,19 +32,4 @@ public class Category extends AbstractModel {
 	@Size(min = 5, max = 100)
 	@Column(name = "name", length = 100, nullable = false, unique = true)
 	private String name;
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(name).toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Category))
-			return false;
-		final Category category = (Category) o;
-		return new EqualsBuilder().append(name, category.name).isEquals();
-	}
 }

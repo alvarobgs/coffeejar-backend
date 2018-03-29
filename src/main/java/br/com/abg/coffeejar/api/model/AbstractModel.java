@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade abstrata.
@@ -17,9 +18,13 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @MappedSuperclass
+@ToString(of = { "id" })
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class AbstractModel {
 
+	/**
+	 * ID.
+	 */
 	@Id
 	@Getter
 	@Setter
