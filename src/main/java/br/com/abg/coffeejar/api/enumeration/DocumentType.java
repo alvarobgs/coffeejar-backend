@@ -14,6 +14,7 @@ import lombok.Getter;
  * @since 1.0.0
  */
 public enum DocumentType {
+
 	/**
 	 * CNPJ.
 	 */

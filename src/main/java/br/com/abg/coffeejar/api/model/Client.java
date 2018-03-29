@@ -1,25 +1,35 @@
 package br.com.abg.coffeejar.api.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.abg.coffeejar.api.enumeration.PersonType;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para clientes.
  *
  * @author <a href="mail:alvaro.govone@waiodev.com.br">Alvaro Govone</a>
+ *
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "name", "personType" }, callSuper = false)
 @Table(name = "client")
 public class Client extends AbstractModel {
 
@@ -43,25 +53,36 @@ public class Client extends AbstractModel {
 	@Column(name = "person_type", length = 25, nullable = false)
 	private PersonType personType;
 
+	/**
+	 * Documentos.
+	 */
+	@Getter
+	@Setter
+	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Document> documents;
 
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Client))
-			return false;
+	/**
+	 * Contatos.
+	 */
+	@Getter
+	@Setter
+	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Contact> contacts;
 
-		final Client client = (Client) o;
+	/**
+	 * Endereços.
+	 */
+	@Getter
+	@Setter
+	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Address> addresses;
 
-		if (!name.equals(client.name))
-			return false;
-		return personType == client.personType;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = name.hashCode();
-		result = 31 * result + personType.hashCode();
-		return result;
+	/**
+	 * Construtor.
+	 */
+	public Client() {
+		this.addresses = new ArrayList<>();
+		this.contacts = new ArrayList<>();
+		this.documents = new ArrayList<>();
 	}
 }

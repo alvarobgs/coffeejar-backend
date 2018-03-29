@@ -9,11 +9,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para país.
@@ -23,6 +22,8 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "name" }, callSuper = false)
 @Table(name = "country")
 public class Country extends AbstractModel {
 
@@ -63,19 +64,4 @@ public class Country extends AbstractModel {
 	@Setter
 	@OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
 	private List<State> states;
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(name).toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Country))
-			return false;
-		final Country country = (Country) o;
-		return new EqualsBuilder().append(name, country.name).isEquals();
-	}
 }

@@ -1,9 +1,9 @@
 package br.com.abg.coffeejar.api.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -14,8 +14,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Entidade para venda.
@@ -25,14 +27,24 @@ import lombok.Setter;
  * @since 1.0.0
  */
 @Entity
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = { "order", "client" }, callSuper = false)
 @Table(name = "sales")
-public class Sales extends AbstractOrder {
+public class Sales extends AbstractModel {
 
 	/**
 	 * Constante para chave estrangeira.
 	 */
 	@Transient
 	private static final transient String FK = "fk_sales_";
+
+	/**
+	 * Ordem.
+	 */
+	@Getter
+	@Setter
+	@Embedded
+	private Order order;
 
 	/**
 	 * Cliente.
@@ -65,8 +77,7 @@ public class Sales extends AbstractOrder {
 	 * Construtor.
 	 */
 	public Sales() {
-		super.date = new Date();
-		super.freight = new Freight();
+		this.order = new Order();
 		this.products = new ArrayList<>();
 	}
 }
